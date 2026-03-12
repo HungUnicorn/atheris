@@ -37,8 +37,20 @@ If you don't have `clang` installed or it's too old, you'll need to download and
 
 Apple Clang doesn't come with libFuzzer, so you'll need to install a new version of LLVM from head. Follow the instructions in Installing Against New LLVM below.
 
-#### Installing Against New LLVM
+Option 1: Using Homebrew (Recommended)
+```bash
+brew install llvm
 
+# On Apple Silicon (M1/M2/M3):
+CLANG_BIN="/opt/homebrew/opt/llvm/bin/clang" pip3 install atheris
+
+# On Intel Macs:
+CLANG_BIN="/usr/local/opt/llvm/bin/clang" pip3 install atheris
+
+# Note: If you encounter errors regarding setuptools or pybind11, try installing without build isolation:
+pip3 install pybind11 setuptools && CLANG_BIN="..." pip3 install atheris --no-build-isolation
+```
+Option 2: Building LLVM from Source (Fallback)
 ```bash
 # Building LLVM
 git clone https://github.com/llvm/llvm-project.git
@@ -46,12 +58,11 @@ cd llvm-project
 mkdir build
 cd build
 cmake -DLLVM_ENABLE_PROJECTS='clang;compiler-rt' -G "Unix Makefiles" ../llvm
-make -j 10  # This step is very slow
+make -j 10
 
 # Installing Atheris
 CLANG_BIN="$(pwd)/bin/clang" pip3 install <whatever>
 ```
-
 ## Using Atheris
 
 ### Example
